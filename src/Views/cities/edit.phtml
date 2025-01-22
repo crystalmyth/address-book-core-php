@@ -1,0 +1,23 @@
+<h1 class="text-center mb-4">Update City</h1>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form action="/cities/edit?id=<?= $city['id'] ?>" method="POST">
+            <div class="mb-3">
+                <label for="cityName" class="form-label">City Name</label>
+                <input type="text" name="name" id="cityName" class="form-control  <?php if($error): echo 'is-invalid'; endif; ?>" placeholder="Enter city name" value="<?= $_POST['name'] ?? $city['name'] ?>" required>
+                <div class="invalid-feedback">
+                    <?= $error ?? "Please provide name." ?>
+                </div>
+            </div>
+            <div class="text-end">
+                <a href="/cities" class="btn btn-danger">Back</a>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+</script>

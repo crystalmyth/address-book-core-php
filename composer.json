@@ -1,0 +1,24 @@
+{
+    "name": "lakshya/address-book",
+    "description": "A simple core PHP address book application.",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "scripts": {
+        "start": "nohup php -S localhost:8000 -t public &",
+        "stop": "pkill -f \"php -S localhost:8000\"",
+        "create:table": "php src/Migrations/create_tables.php",
+        "seeder": "php src/Seeds/seeder.php"
+    }
+}

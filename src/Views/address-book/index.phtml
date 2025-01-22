@@ -1,0 +1,101 @@
+<h1 class="text-center mb-4">Address Book</h1>
+<div class="d-flex align-items-center justify-content-between">
+    <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="exoprtDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        Export
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="exoprtDropdown">
+    <?php foreach(['csv', 'xml', 'json'] as $format):?>
+        <li><a class="dropdown-item" href="/export?format=<?= $format ?>"><?= strtoupper($format) ?></a></li>
+    <?php endforeach; ?>
+    </ul>
+    </div>
+<a href="/create" class="mb-2 btn btn-primary">Create Address</a>
+</div>
+<div class="d-md-flex d-block justify-content-between mb-2">
+    <div class="d-md-flex d-block align-items-center mb-md-0 mb-2 text-center text-md-left">
+        Total: <?= $total ?>
+    </div>
+    <div class="d-md-flex d-block align-items-center gap-2">
+        <form action="/" method="get" class="mb-md-0 mb-2">
+            <div class="input-group">
+                <input type="hidden" name="page" value="<?= $page ?>">
+                <input type="hidden" name="limit" value="<?= $limit ?>">
+                <input type="text" name="q" class="form-control" placeholder="Search by *" value="<?= $_GET['q'] ?? '' ?>">
+                <button type="submit" class="btn btn-dark">Search</button>
+            </div>
+        </form>
+        <div class="dropdown">
+            <button class="btn btn-secondary w-100 mb-md-0 mb-2 dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Limit: <?= $limit ?>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <?php
+                    foreach ([10, 25, 50, 100] as $i) {
+                        $active = ($i === $limit) ? 'active' : '';
+                        $href = "/?limit=" . $i . "&page=" . $page;
+                        echo '<li><a class="dropdown-item ' . $active . '" href="' .$href. '">' . $i . '</a></li>';
+                    }
+                ?>
+            </ul>
+        </div>
+    </div>
+</div>
+<div style="overflow-x: auto">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>City</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($addresses)) : ?>
+                <?php foreach ($addresses as $address) : ?>
+                    <tr>
+                        <td style="width: 2rem" class="text-center align-middle"><?= htmlspecialchars($address['id']) ?></td>
+                        <td class="align-middle"><?= htmlspecialchars($address['name']) ?></td>
+                        <td class="align-middle"><?= htmlspecialchars($address['phone']) ?></td>
+                        <td class="align-middle"><?= htmlspecialchars($address['email']) ?></td>
+                        <td class="align-middle"><?= htmlspecialchars($address['city_name']) ?></td>
+                        <td style="width: 8rem" class="text-center">
+                            <a href="/edit?id=<?= $address['id'] ?>" class="btn mb-2 w-100 btn-sm btn-warning">Edit</a>
+                            <a href="/delete?id=<?= $address['id'] ?>" class="btn mb-2 w-100 btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else : ?>
+                <tr>
+                    <td colspan="6" class="text-center">No addresses found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+<div aria-label="Page navigation example">
+  <ul class="pagination justify-content-end">
+    <li class="page-item">
+      <a class="page-link <?php if ($page === 1): echo "disabled"; endif; ?>" href="/?limit=<?= $limit ?>&page=<?= $page - 1 ? $page - 1 : 1 ?>" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    <?php
+        $start = max($page, $page - 3);
+        $end = min($total, $page + 3);
+        for ($i = $start; $i <= $end; $i++) {
+            $active = ($i === $page) ? 'active' : '';
+            echo '<li class="page-item ' . $active . '"><a class="page-link" href="/?limit=' . $limit . '&page=' . $i . '">' . $i . '</a></li>';
+        }
+    ?>
+    <a class="page-link <?php if ($total/$limit <= $page): echo "disabled"; endif; ?>" href="/?limit=<?= $limit ?>&page=<?= $page + 1 ?>" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</div>

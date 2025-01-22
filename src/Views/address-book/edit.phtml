@@ -1,0 +1,84 @@
+<h1 class="text-center mb-4">Edit Contact</h1>
+
+<form action="/edit?id=<?= $address['id'] ?>" method="POST" class="needs-validation" novalidate>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control <?php if($errors['name']): echo 'is-invalid'; endif; ?>" id="name" name="name" value="<?= $_POST['name'] ?? $address['name'] ?>" required>
+            <div class="invalid-feedback">
+                <?= $errors['name'] ?? 'Please enter a name.' ?>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" class="form-control <?php if($errors['phone']): echo 'is-invalid'; endif; ?>" id="phone" name="phone" value="<?= $_POST['phone'] ?? $address['phone'] ?>" required>
+            <div class="invalid-feedback">
+                <?= $errors['email'] ?? 'Please enter a valid phone number.' ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control <?php if($errors['email']): echo 'is-invalid'; endif; ?>" id="email" name="email" value="<?= $_POST['email'] ?? $address['email'] ?>" required>
+            <div class="invalid-feedback">
+                <?= $errors['email'] ?? 'Please enter a valid email address.' ?>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="city" class="form-label">City</label>
+            <select class="form-select <?php if($errors['city_id']): echo 'is-invalid'; endif; ?>" id="city" name="city_id" required>
+                <option value="" selected disabled>Select a city</option>
+                <?php foreach ($cities as $city): ?>
+                    <option value="<?= htmlspecialchars($city['id']) ?>" <?php if ($_POST['city_id'] ?? $address['city_id'] == $city['id']): ?>selected<?php endif; ?>>
+                        <?= htmlspecialchars($city['name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <div class="invalid-feedback">
+                <?= $errors['city_id'] ?? 'Please select a city.' ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label for="street" class="form-label">Street</label>
+            <input type="text" class="form-control <?php if($errors['street']): echo 'is-invalid'; endif; ?>" id="street" name="street" value="<?= $_POST['street'] ?? $address['street'] ?>" required>
+            <div class="invalid-feedback">
+                <?= $errors['street'] ?? 'Please enter a street.' ?>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="zipcode" class="form-label">Zipcode</label>
+            <input type="text" class="form-control <?php if($errors['zipcode']): echo 'is-invalid'; endif; ?>" id="zipcode" name="zipcode" value="<?= $_POST['zipcode'] ?? $address['zipcode'] ?>" required>
+            <div class="invalid-feedback">
+                <?= $errors['zipcode'] ?? 'Please enter a valid zipcode number.' ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-end">
+        <button type="submit" class="btn btn-primary">Update Contact</button>
+        <a href="/" class="btn btn-danger">Back</a>
+    </div>
+</form>
+    
+
+    <script>
+        // Bootstrap validation script
+        (function () {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+    </script>

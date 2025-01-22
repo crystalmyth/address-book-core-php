@@ -1,0 +1,40 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.layout {
+    min-height: calc(100vh - 6rem);
+    padding-top: 5rem;
+
+    .btn{
+        @media screen and (max-width: 768px) {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    .pagination{
+        @media screen and (max-width: 768px) {
+            margin-top: 1rem;
+            justify-content: center !important;
+        }
+    }
+}
+
+.alert{
+    position: fixed;
+    width: 100%;
+    bottom: 1rem;
+    left: 1rem;
+    z-index: 100;
+    text-align: center;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+@import './components/navbar.scss';
