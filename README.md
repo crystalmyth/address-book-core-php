@@ -1,5 +1,5 @@
 # Address Book Application
-![Address Book Logo](public/logo.png){:height="30px" width="30px"} 
+<img src="public/logo.png" alt="Your Logo" width="30" height="30"> 
 
 This is a simple Address Book application built with PHP, using basic MVC principles, and Bootstrap 5 for styling. It supports CRUD operations for address book entries and cities, along with notifications, pagination, and search functionality.
 
