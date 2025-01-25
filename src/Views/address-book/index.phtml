@@ -17,7 +17,15 @@
         Total: <?= $total ?>
     </div>
     <div class="d-md-flex d-block align-items-center gap-2">
-        <form action="/" method="get" class="mb-md-0 mb-2">
+        <form action="/" method="get" class="mb-md-0 mb-2 d-md-flex d-block gap-2">
+            <div class="input-group">
+                <select name="tag" id="" class="form-select">
+                    <option value="">Select Tag</option>
+                <?php foreach($tags as $tag): ?>
+                    <option value="<?= $tag['name'] ?>" <?php if(isset($_GET['tag']) && ($_GET['tag'] == $tag['name'])): echo 'selected'; endif; ?>><?= $tag['name'] ?></option>
+                <?php endforeach; ?>
+                </select>
+            </div>
             <div class="input-group">
                 <input type="hidden" name="page" value="<?= $page ?>">
                 <input type="hidden" name="limit" value="<?= $limit ?>">

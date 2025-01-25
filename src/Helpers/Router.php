@@ -2,8 +2,9 @@
 
 namespace App\Helpers;
 
-use App\Controllers\AddressBookController;
+use App\Controllers\ContactController;
 use App\Controllers\CityController;
+use App\Controllers\GroupController;
 
 class Router
 {
@@ -11,23 +12,23 @@ class Router
     {
         return [
             '/' => [
-                'controller' => AddressBookController::class,
+                'controller' => ContactController::class,
                 'method' => 'index',
             ],
             '/create' => [
-                'controller' => AddressBookController::class,
+                'controller' => ContactController::class,
                 'method' => 'create',
             ],
             '/edit' => [
-                'controller' => AddressBookController::class,
+                'controller' => ContactController::class,
                 'method' => 'edit',
             ],
             '/delete' => [
-                'controller' => AddressBookController::class,
+                'controller' => ContactController::class,
                 'method' => 'delete',
             ],
             '/export' => [
-                'controller' => AddressBookController::class,
+                'controller' => ContactController::class,
                 'method' => 'export',
             ],
             // Routes for Cities
@@ -45,6 +46,23 @@ class Router
             ],
             '/cities/delete' => [
                 'controller' => CityController::class,
+                'method' => 'delete',  // Handle city deletion
+            ],
+            // Routes for Groups
+            '/groups' => [
+                'controller' => GroupController::class,
+                'method' => 'index',  // Show all groups
+            ],
+            '/groups/create' => [
+                'controller' => GroupController::class,
+                'method' => 'create',  // Show form to create a new city
+            ],
+            '/groups/edit' => [
+                'controller' => GroupController::class,
+                'method' => 'edit',  // Show form to edit a city
+            ],
+            '/groups/delete' => [
+                'controller' => GroupController::class,
                 'method' => 'delete',  // Handle city deletion
             ],
         ];

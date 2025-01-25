@@ -15,7 +15,6 @@ class Export
                 header('Content-Type: ' . $contentType);
                 header('Content-Disposition: attachment; filename="' . $filename . '"');
                 $exportedData = json_encode($data);
-                die($exportedData);
                 break;
             case 'csv':
                 $contentType = 'text/csv';
@@ -40,14 +39,14 @@ class Export
     private static function arrayToCsv(array $data)
     {
         $output = fopen('php://output', 'w');
-        fputcsv($output, ['ID', 'Name', 'Email', 'Phone', 'City', 'Street', 'Zipcode']); // Header row
+        fputcsv($output, ['ID', 'Name', 'Email', 'Phone', 'City', 'Street', 'Zipcode', 'Tags']); // Header row
         foreach ($data as $row) {
             fputcsv($output, $row);
         }
         fclose($output);
     }
 
-    private static function arrayToXml(array $data, $rootElement = 'address_book')
+    private static function arrayToXml(array $data, $rootElement = 'contacts')
     {
         $xml = new SimpleXMLElement("<{$rootElement}/>");
         foreach ($data as $row) {
@@ -59,6 +58,7 @@ class Export
             $address->addChild('city', $row['city_name']);
             $address->addChild('street', $row['street']);
             $address->addChild('zipcode', $row['zipcode']);
+            $address->addChild('tags', $row['tags']);
         }
         
         $output = fopen('php://output', 'w');

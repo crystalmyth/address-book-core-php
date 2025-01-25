@@ -1,0 +1,35 @@
+<h1 class="text-center mb-4">Add New Group</h1>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form action="/groups/create" method="POST">
+            <div class="mb-3">
+                <label for="groupName" class="form-label">Group Name</label>
+                <input type="text" name="name" id="groupName" class="form-control <?php if($error): echo 'is-invalid'; endif; ?>" placeholder="Enter group name" value="<?= $_POST['name'] ?? ''?>" required>
+                <div class="invalid-feedback">
+                    <?= $error ?? "Please provide name." ?>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="parent_ids" class="form-label">Parent Groups</label>
+                <select name="parent_ids[]" id="parent_ids" class="form-select" multiple>
+                    <option value="">Select</option>
+                    <?php foreach($groups as $group): ?>
+                        <option value="<?= $group['id'] ?>"><?= $group['name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="invalid-feedback">
+                    <?= $error ?? "Please provide name." ?>
+                </div>
+            </div>
+            <div class="text-end">
+                <a href="/groups" class="btn btn-danger">Back</a>
+                <button type="submit" class="btn btn-primary">Add Group</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+</script>
