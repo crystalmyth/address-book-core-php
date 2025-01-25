@@ -12,7 +12,7 @@ class CityController
 
     public function __construct()
     {
-        // Instantiate the AddressBookModel
+        // Instantiate the ContactModel
         self::$City = new City();
     }
     // Show all cities

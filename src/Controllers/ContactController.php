@@ -2,21 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Models\AddressBook;
+use App\Models\Contact;
 use App\Models\City;
+use App\Models\Group;
 use App\Helpers\View;
 use App\Helpers\Notification;
 
-class AddressBookController
+class ContactController
 {
-    private static $AddressBook;
+    private static $Contact;
     private static $City;
+    private static $Group;
 
     public function __construct()
     {
-        // Instantiate the AddressBookModel
-        self::$AddressBook = new AddressBook();
+        // Instantiate the ContactModel
+        self::$Contact = new Contact();
         self::$City = new City();
+        self::$Group = new Group();
     }
 
     // Display the list of addresses
@@ -24,15 +27,14 @@ class AddressBookController
     {
         $page = $_GET['page'] ?? 1;
         $limit = $_GET['limit'] ?? 10;
-        if(isset($_GET['q'])) {
-            $data = self::$AddressBook->search($page, $limit, $_GET['q']);
-        } else {
-            $data = self::$AddressBook->getAll($page, $limit);
-        }
+        $q = $_GET['q'] ?? '';
+        $tag = $_GET['tag'] ?? '';
+        $data = self::$Contact->getAll($page, $limit, $q, $tag);
         View::render('address-book/index', 
             [
                 'addresses' => $data['addresses'],
                 'total' => $data['total'],
+                'tags' => $data['tags'],
                 'page' => $page,
                 'limit' => $limit
             ]
@@ -43,6 +45,7 @@ class AddressBookController
     public function create()
     {
         $cities = self::$City->getAll();
+        $groups = self::$Group->getAll()['groups'];
         $errors = [
             'name' => '',
             'email' => '',
@@ -59,6 +62,8 @@ class AddressBookController
             $city_id = $_POST['city_id'] ?? '';
             $street = $_POST['street'] ?? '';
             $zipcode = $_POST['zipcode'] ?? '';
+            $tags = $_POST['tags'] ?? [];
+            $groups = array_unique($_POST['groups']) ?? [];
 
             if(empty($name)) {
                 $errors['name'] = "Name is required.";
@@ -79,14 +84,14 @@ class AddressBookController
                 $errors['zipcode'] = "Zipcode is required.";
             }
 
-            $address = self::$AddressBook->getByName($name);
+            $address = self::$Contact->getByName($name);
             if ($address) {
                 $errors['name'] = "Name already exists.";
             }
     
             if (!array_values($errors)[0]) {
                 // Call the model to insert the new city
-                self::$AddressBook->create($name, $email, $phone, $city_id, $street, $zipcode);
+                self::$Contact->create($name, $email, $phone, $city_id, $street, $zipcode, $tags, $groups);
 
                 Notification::add('success', 'Address: '. $name .' created successfully !!');
                 // Redirect to the cities list after successful creation
@@ -95,7 +100,7 @@ class AddressBookController
             }
         }
 
-        View::render('address-book/create', ['cities' => $cities['cities'], 'errors' => $errors]);
+        View::render('address-book/create', ['cities' => $cities['cities'], 'groups' => $groups, 'errors' => $errors]);
     }
 
 
@@ -103,7 +108,8 @@ class AddressBookController
     public function edit($id)
     {
         $cities = self::$City->getAll();
-        $address = self::$AddressBook->getById($id);
+        $address = self::$Contact->getById($id);
+        $groups = self::$Group->getAll()['groups'];
 
         if (!$address) {
             echo "<h1>Address Not Found</h1>";
@@ -116,7 +122,7 @@ class AddressBookController
             'phone' => null,
             'city_id' => null,
             'street' => null,
-            'zipcode' => null,
+            'zipcode' => null
         ];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Get data from the form
@@ -126,6 +132,8 @@ class AddressBookController
             $city_id = $_POST['city_id'] ?? '';
             $street = $_POST['street'] ?? '';
             $zipcode = $_POST['zipcode'] ?? '';
+            $tags = $_POST['tags'] ?? '';
+            $groups = $_POST['groups'] ?? '';
 
             if(empty($name)) {
                 $errors['name'] = "Name is required.";
@@ -146,15 +154,14 @@ class AddressBookController
                 $errors['zipcode'] = "Zipcode is required.";
             }
 
-            $existAddress = self::$AddressBook->getByName($name, $id);
+            $existAddress = self::$Contact->getByName($name, $id);
             if ($existAddress) {
                 $errors['name'] = "Name already exists.";
             }
             
             if (!array_values($errors)[0]) {
                 // Call the model to insert the new city
-                self::$AddressBook->update($id, $name, $email, $phone, $city_id, $street, $zipcode);
-
+                self::$Contact->update($id, $name, $email, $phone, $city_id, $street, $zipcode, $tags, $groups);
                 Notification::add('success', 'Address: '. $name .' updated successfully !!');
                 // Redirect to the cities list after successful creation
                 header('Location: /');
@@ -162,7 +169,7 @@ class AddressBookController
             }
         }
 
-        View::render('address-book/edit', ['address' => $address, 'cities' => $cities['cities'], 'errors' => $errors]);
+        View::render('address-book/edit', ['address' => $address, 'cities' => $cities['cities'], 'groups' => $groups, 'errors' => $errors]);
     }
 
 
@@ -171,18 +178,18 @@ class AddressBookController
     {
         $format = $_GET['format'] ?? 'csv';
         $filename = $_GET['filename'] ?? 'address_book';
-        $data = self::$AddressBook->getAll();
+        $data = self::$Contact->getAll();
         
-        self::$AddressBook->export($format, $filename);
+        self::$Contact->export($format, $filename);
         exit;
     }
 
     // Handle address book deletion
     public function delete($id)
     {
-        $name = self::$AddressBook->getById($id)['name'];
+        $name = self::$Contact->getById($id)['name'];
         // Call the model to delete the city
-        self::$AddressBook->delete($id);
+        self::$Contact->delete($id);
 
         Notification::add('success', 'Address: '. $name .' deleted successfully !!');
         // Redirect to the cities list after successful deletion

@@ -1,0 +1,75 @@
+<h1 class="text-center mb-4">Update Group</h1>
+
+<div class="card shadow">
+    <div class="card-body">
+        <form action="/groups/edit?id=<?= $group['id'] ?>" method="POST">
+            <div class="mb-3">
+                <label for="groupName" class="form-label">Group Name</label>
+                <input type="text" name="name" id="groupName" class="form-control  <?php if($error): echo 'is-invalid'; endif; ?>" placeholder="Enter group name" value="<?= $_POST['name'] ?? $group['name'] ?>" required>
+                <div class="invalid-feedback">
+                    <?= $error ?? "Please provide name." ?>
+                </div>
+            </div>
+            <div class="mb-3">
+            <label for="parent_ids" class="form-label">Parent Groups</label>
+                <select name="parent_ids[]" id="parent_ids" class="form-select" multiple>
+                    <option value="">Select</option>
+                    <?php foreach($groups as $g): ?>
+                        <option value="<?= $g['id'] ?>" <?php if(in_array($g['id'], $parent_ids)): echo 'selected'; endif; ?>><?= $g['name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="invalid-feedback">
+                    <?= $error ?? "Please provide name." ?>
+                </div>
+            </div>
+            <div class="text-end">
+                <a href="/groups" class="btn btn-danger">Back</a>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="card shadow mt-3">
+    <div class="card-body">
+        <h5 class="card-title">Contacts Paired with group</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">ID</th>
+                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">Phone</th>
+                    <th class="text-center" scope="col">Email</th>
+                    <th class="text-center" scope="col">City</th>
+                    <th class="text-center" scope="col">Inherited</th>
+                    <th class="text-center" scope="col">Show</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php if(!empty($contacts)): ?>
+                <?php foreach($contacts as $c): ?>
+                    <tr>
+                        <th class="text-center align-middle" scope="row"><?= $c['id'] ?></th>
+                        <td class="text-center align-middle"><?= $c['name'] ?></td>
+                        <td class="text-center align-middle"><?= $c['phone'] ?></td>
+                        <td class="text-center align-middle"><?= $c['email'] ?></td>
+                        <td class="text-center align-middle"><?= $c['city'] ?></td>
+                        <td class="text-center align-middle"><?= $c['inherited'] ? 'Yes' : 'No' ?></td>
+                        <td class="text-center align-middle">
+                            <a href="../edit?id=<?= $c['id'] ?>" class="btn btn-success btn-xs">Show</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="6" class="text-center">No groups found.</td>
+                </tr>
+            <?php endif;?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+
+</script>
